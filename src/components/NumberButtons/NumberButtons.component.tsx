@@ -1,10 +1,10 @@
 interface INumberButtonsComponent {
-    label: string
-    onClickNumberButton: () => void
+    value: string
+    onClickNumberButtonHandler: () => void
 }
 
 export const NumberButtonsComponent = (props: INumberButtonsComponent) => {
     return (
-        <button onClick={props.onClickNumberButton}>{props.label}</button>
+        <button onClick={props.onClickNumberButtonHandler}>{props.value}</button>
     )
 }

@@ -1,39 +1,150 @@
+import { useState } from "react"
 import { DisplayComponent } from "../../components/Display/Display.component"
 import { NumberButtonsComponent } from "../../components/NumberButtons/NumberButtons.component"
 import { OperatorButtonsComponent } from "../../components/OperatorButtons/OperatorButtons.component"
+import { validateIfIsAllowedCharacter } from "../../helpers"
 
 
 export const CalculatorPage = () => {
+    const [storedCalculation, setStoredCalculation] = useState<string>('')
 
     const numberButtons = [
-        { label: '1', onClick: () => console.log('boton 1') },
-        { label: '2', onClick: () => console.log('boton 2') },
-        { label: '3', onClick: () => console.log('boton 3') },
-        { label: '4', onClick: () => console.log('boton 4') },
-        { label: '5', onClick: () => console.log('boton 5') },
-        { label: '6', onClick: () => console.log('boton 6') },
-        { label: '7', onClick: () => console.log('boton 7') },
-        { label: '8', onClick: () => console.log('boton 8') },
-        { label: '9', onClick: () => console.log('boton 9') }
+        { value: '0', onClick: () => onClickAddNumber('0') },
+        { value: '1', onClick: () => onClickAddNumber('1') },
+        { value: '2', onClick: () => onClickAddNumber('2') },
+        { value: '3', onClick: () => onClickAddNumber('3') },
+        { value: '4', onClick: () => onClickAddNumber('4') },
+        { value: '5', onClick: () => onClickAddNumber('5') },
+        { value: '6', onClick: () => onClickAddNumber('6') },
+        { value: '7', onClick: () => onClickAddNumber('7') },
+        { value: '8', onClick: () => onClickAddNumber('8') },
+        { value: '9', onClick: () => onClickAddNumber('9') }
     ]
 
 
     const operatorButton = [
-        { label: '+', onClick: () => console.log('boton +') },
-        { label: '-', onClick: () => console.log('boton -') },
-        { label: '*', onClick: () => console.log('boton *') },
-        { label: '/', onClick: () => console.log('boton /') },
-        { label: '=', onClick: () => console.log('boton =') },
-        { label: 'c', onClick: () => console.log('boton c') },
-        { label: '.', onClick: () => console.log('boton .') }
+        { value: '+', onClick: () => onClickAddOperator('+') },
+        { value: '-', onClick: () => onClickAddOperator('-') },
+        { value: '*', onClick: () => onClickAddOperator('*') },
+        { value: '/', onClick: () => onClickAddOperator('/') },
+        { value: '=', onClick: () => onClickEqual() },
+        { value: 'c', onClick: () => onClickClearCalculation() },
+        { value: '.', onClick: () => onClickAddOperator('.') }
     ]
 
+
+    const onClickAddNumber = (value: string) => {
+
+        setStoredCalculation(storedCalculation + value)
+
+    }
+
+    const onClickAddOperator = (value: string) => {
+        setStoredCalculation(storedCalculation + value)
+    }
+
+    const onClickClearCalculation = () => {
+        setStoredCalculation('')
+    }
+
+    const onChangeDisplayHandler = (value: string) => {
+        if (validateIfIsAllowedCharacter(value)) {
+            setStoredCalculation(value)
+        }
+    }
+
+
+    const currentValueIsNumber = (currentValue: string) => ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].includes(currentValue)
+    const currentValueIsOperator = (currentValue: string) => ['+', '-', '/', '*'].includes(currentValue)
+
+
+
+    const onClickEqual = () => {
+        const storedCalculationToCharacterArray = storedCalculation.split('')
+
+        const storedCalculationWithValuesExtracted: string[] = storedCalculationToCharacterArray.reduce((accumulator, currentValue) => {
+
+            const lastValue = accumulator[accumulator.length - 1]
+
+            if (currentValueIsNumber(currentValue) && currentValueIsNumber(lastValue) === false) {
+                accumulator.push(currentValue)
+            }
+
+            if (currentValueIsNumber(currentValue) && currentValueIsNumber(lastValue)) {
+                accumulator[accumulator.length - 1] = accumulator[accumulator.length - 1] + currentValue
+            }
+
+            if (currentValueIsOperator(currentValue)) {
+                accumulator.push(currentValue)
+            }
+
+            return accumulator
+
+        }, [] as string[])
+
+
+        type TOperator = '*' | '/' | '+' | '-'
+
+        const arrayWithNumbersAndOperator: Array<number | TOperator> = storedCalculationWithValuesExtracted.map(value => {
+            if (value === '*') {
+                return value
+            }
+            if (value === '/') {
+                return value
+            }
+
+            if (value === '+') {
+                return value
+            }
+
+            if (value === '-') {
+                return value
+            }
+
+
+            return Number(value)
+
+        })
+
+
+
+        const storedCalculationResult = arrayWithNumbersAndOperator.reduce((accumulator, currentValue) => {
+
+            let { operator, value } = accumulator
+
+            if (typeof currentValue === 'number') {
+                if (operator === '+') {
+                    value += currentValue
+                } else if (operator === '-') {
+                    value -= currentValue
+                } else if (operator === '*') {
+                    value *= currentValue
+                } else if (operator === '/') {
+                    value /= currentValue
+                }
+            } else {
+                operator = currentValue
+            }
+            return { value, operator }
+
+        }, { value: 0, operator: '+' } as { value: number, operator: TOperator }).value
+
+        const calculationResult = storedCalculationResult.toString()
+        setStoredCalculation(calculationResult)
+
+    }
+
     return (
-        <>
-            <div>Calculator</div>
+        <div>
+            <div>
+                <p>Calculator</p>
+            </div>
 
             <div>
-                <DisplayComponent />
+                <DisplayComponent
+                    storedCalculation={storedCalculation}
+                    onChangeDisplay={onChangeDisplayHandler}
+                />
             </div>
 
             <div>
@@ -41,8 +152,8 @@ export const CalculatorPage = () => {
                     operatorButton.map((button, index) => (
                         <OperatorButtonsComponent
                             key={index}
-                            label={button.label}
-                            onClickOperatorButton={button.onClick}
+                            value={button.value}
+                            onClickOperatorButtonHandler={button.onClick}
                         />
                     ))
                 }
@@ -53,12 +164,14 @@ export const CalculatorPage = () => {
                     numberButtons.map((button, index) => (
                         <NumberButtonsComponent
                             key={index}
-                            label={button.label}
-                            onClickNumberButton={button.onClick}
+                            value={button.value}
+                            onClickNumberButtonHandler={button.onClick}
                         />
                     ))
                 }
             </div>
-        </>
+        </div>
     )
 }
+
+

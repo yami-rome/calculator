@@ -1,16 +1,18 @@
-import React, { useState } from "react"
+interface IDisplayComponent {
+    storedCalculation: string
+    onChangeDisplay: (value: string) => void
+}
 
-export const DisplayComponent = () => {
 
-    const [value, setValue] = useState<string>('')
+export const DisplayComponent = (props: IDisplayComponent) => {
 
-    const onChangeInputValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setValue(e.target.value)
-        console.log(value)
+    const onClickValueInputHandler = (value: string) => {
+        props.onChangeDisplay(value)
     }
+
     return (
         <>
-            <input type="text" value={value} onChange={onChangeInputValue} />
+            <input type="text" value={props.storedCalculation} onChange={e => onClickValueInputHandler(e.target.value)} />
         </>
     )
 }
