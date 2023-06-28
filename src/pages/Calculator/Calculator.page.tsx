@@ -137,38 +137,37 @@ export const CalculatorPage = () => {
     return (
         <div>
             <div>
-                <p>Calculator</p>
-            </div>
+                <div>
+                    <DisplayComponent
+                        storedCalculation={storedCalculation}
+                        onChangeDisplay={onChangeDisplayHandler}
+                        
+                    />
+                </div>
 
-            <div>
-                <DisplayComponent
-                    storedCalculation={storedCalculation}
-                    onChangeDisplay={onChangeDisplayHandler}
-                />
-            </div>
+                <div>
+                    {
+                        operatorButton.map((button, index) => (
+                            <OperatorButtonsComponent
+                                key={index}
+                                value={button.value}
+                                onClickOperatorButtonHandler={button.onClick}
+                            />
+                        ))
+                    }
+                </div>
 
-            <div>
-                {
-                    operatorButton.map((button, index) => (
-                        <OperatorButtonsComponent
-                            key={index}
-                            value={button.value}
-                            onClickOperatorButtonHandler={button.onClick}
-                        />
-                    ))
-                }
-            </div>
-
-            <div>
-                {
-                    numberButtons.map((button, index) => (
-                        <NumberButtonsComponent
-                            key={index}
-                            value={button.value}
-                            onClickNumberButtonHandler={button.onClick}
-                        />
-                    ))
-                }
+                <div>
+                    {
+                        numberButtons.map((button, index) => (
+                            <NumberButtonsComponent
+                                key={index}
+                                value={button.value}
+                                onClickNumberButtonHandler={button.onClick}
+                            />
+                        ))
+                    }
+                </div>
             </div>
         </div>
     )

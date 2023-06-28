@@ -11,8 +11,6 @@ export const DisplayComponent = (props: IDisplayComponent) => {
     }
 
     return (
-        <>
-            <input type="text" value={props.storedCalculation} onChange={e => onClickValueInputHandler(e.target.value)} />
-        </>
+        <input type="text" value={props.storedCalculation} onChange={e => onClickValueInputHandler(e.target.value)} />
     )
 }
