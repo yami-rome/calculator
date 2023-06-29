@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Col, Container, Row } from "react-bootstrap"
 import { DisplayComponent } from "../../components/Display/Display.component"
 import { NumberButtonsComponent } from "../../components/NumberButtons/NumberButtons.component"
 import { OperatorButtonsComponent } from "../../components/OperatorButtons/OperatorButtons.component"
@@ -27,9 +28,9 @@ export const CalculatorPage = () => {
         { value: '-', onClick: () => onClickAddOperator('-') },
         { value: '*', onClick: () => onClickAddOperator('*') },
         { value: '/', onClick: () => onClickAddOperator('/') },
-        { value: '=', onClick: () => onClickEqual() },
         { value: 'c', onClick: () => onClickClearCalculation() },
-        { value: '.', onClick: () => onClickAddOperator('.') }
+        { value: '.', onClick: () => onClickAddOperator('.') },
+        { value: '=', onClick: () => onClickEqual() }
     ]
 
 
@@ -135,41 +136,46 @@ export const CalculatorPage = () => {
     }
 
     return (
-        <div>
-            <div>
-                <div>
+        <>
+            <Container className="container border bg-secondary"  >
+                <Row className="w-50">
+
                     <DisplayComponent
                         storedCalculation={storedCalculation}
                         onChangeDisplay={onChangeDisplayHandler}
-                        
+
                     />
-                </div>
 
-                <div>
-                    {
-                        operatorButton.map((button, index) => (
-                            <OperatorButtonsComponent
-                                key={index}
-                                value={button.value}
-                                onClickOperatorButtonHandler={button.onClick}
-                            />
-                        ))
-                    }
-                </div>
+                </Row>
 
-                <div>
-                    {
-                        numberButtons.map((button, index) => (
-                            <NumberButtonsComponent
-                                key={index}
-                                value={button.value}
-                                onClickNumberButtonHandler={button.onClick}
-                            />
-                        ))
-                    }
-                </div>
-            </div>
-        </div>
+                <Row className="">
+                    <Col md={3}>
+                        {
+                            numberButtons.map((button, index) => (
+                                <NumberButtonsComponent
+                                    key={index}
+                                    value={button.value}
+                                    onClickNumberButtonHandler={button.onClick}
+                                />
+                            )).reverse()
+                        }
+
+                    </Col>
+
+                    <Col md={3}>
+                        {
+                            operatorButton.map((button, index) => (
+                                <OperatorButtonsComponent
+                                    key={index}
+                                    value={button.value}
+                                    onClickOperatorButtonHandler={button.onClick}
+                                />
+                            ))
+                        }
+                    </Col>
+                </Row>
+            </Container>
+        </>
     )
 }
 

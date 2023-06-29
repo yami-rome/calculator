@@ -1,3 +1,5 @@
+
+import Button from 'react-bootstrap/Button';
 interface INumberButtonsComponent {
     value: string
     onClickNumberButtonHandler: () => void
@@ -5,6 +7,6 @@ interface INumberButtonsComponent {
 
 export const NumberButtonsComponent = (props: INumberButtonsComponent) => {
     return (
-        <button onClick={props.onClickNumberButtonHandler}>{props.value}</button>
+        <Button className="btn btn-dark text-warning me-2 my-2"  onClick={props.onClickNumberButtonHandler}>{props.value}</Button>
     )
 }

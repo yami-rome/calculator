@@ -1,3 +1,5 @@
+import { Form} from "react-bootstrap"
+
 interface IDisplayComponent {
     storedCalculation: string
     onChangeDisplay: (value: string) => void
@@ -11,6 +13,6 @@ export const DisplayComponent = (props: IDisplayComponent) => {
     }
 
     return (
-        <input type="text" value={props.storedCalculation} onChange={e => onClickValueInputHandler(e.target.value)} />
+        <Form.Control className="form-control form-control-md text-dark  my-4 mx-3" type="text" value={props.storedCalculation} onChange={e => onClickValueInputHandler(e.target.value)} placeholder="0"/>
     )
 }
